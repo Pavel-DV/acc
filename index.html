@@ -12,14 +12,19 @@
 <script>
     try {
         DeviceMotionEvent.requestPermission().then(response => {
-            if (response === 'granted') {
-                window.addEventListener('deviceorientation', function (event) {
-                    document.body.innerHTML = `${event.alpha} <br/> ${event.beta} <br/> ${event.gamma}`;
-                });
+            try {
+                document.body.innerHTML = response;
+                if (response === 'granted') {
+                    window.addEventListener('deviceorientation', function (event) {
+                        document.body.innerHTML = `${event.alpha} <br/> ${event.beta} <br/> ${event.gamma}`;
+                    });
+                }
+            } catch (e) {
+                document.body.innerHTML = e;
             }
         });
     } catch (e) {
-        alert(e);
+        document.body.innerHTML = e;
     }
 </script>
 
