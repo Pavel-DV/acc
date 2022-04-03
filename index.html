@@ -12,18 +12,21 @@
 <button id="accelPermsButton" onclick="getAccel()" style="height:50px;">Get Accelerometer Permissions</button>
 
 <script>
-    try {
-        window.addEventListener('deviceorientation', event => {
-            // document.body.innerHTML = `${event.alpha} <br/> ${event.beta} <br/> ${event.gamma}`;
-        });
-        window.addEventListener('devicemotion', event => {
-            document.body.innerHTML = `${event.acceleration.x} <br/> ${event.acceleration.y} <br/> ${event.acceleration.z}`
-                + ` <br/> ${event.accelerationIncludingGravity.x} <br/> ${event.accelerationIncludingGravity.y} <br/> ${event.accelerationIncludingGravity.z}`;
-        });
-    } catch (e) {
-        document.body.innerHTML = e;
-    }
+    init();
 
+    function init() {
+        try {
+            window.addEventListener('deviceorientation', event => {
+                // document.body.innerHTML = `${event.alpha} <br/> ${event.beta} <br/> ${event.gamma}`;
+            });
+            window.addEventListener('devicemotion', event => {
+                document.body.innerHTML = `${event.acceleration.x} <br/> ${event.acceleration.y} <br/> ${event.acceleration.z}`
+                    + ` <br/> ${event.accelerationIncludingGravity.x} <br/> ${event.accelerationIncludingGravity.y} <br/> ${event.accelerationIncludingGravity.z}`;
+            });
+        } catch (e) {
+            document.body.innerHTML = e;
+        }
+    }
     function getAccel() {
         document.body.innerHTML = 'ssssssssssss';
 
@@ -32,9 +35,7 @@
                 try {
                     document.body.innerHTML = response;
                     if (response === 'granted') {
-                        window.addEventListener('deviceorientation', event => {
-                            document.body.innerHTML = `${event.alpha} <br/> ${event.beta} <br/> ${event.gamma}`;
-                        });
+                        init();
                     }
                 } catch (e) {
                     document.body.innerHTML = e;
