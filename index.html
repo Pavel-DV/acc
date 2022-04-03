@@ -9,24 +9,29 @@
 </head>
 <body>
 
-<script>
-    document.body.innerHTML = 'ssssssssssss';
+<button id="accelPermsButton" onclick="getAccel()" style="height:50px;">Get Accelerometer Permissions</button>
 
-    try {
-        DeviceMotionEvent.requestPermission().then(response => {
-            try {
-                document.body.innerHTML = response;
-                if (response === 'granted') {
-                    window.addEventListener('deviceorientation', function (event) {
-                        document.body.innerHTML = `${event.alpha} <br/> ${event.beta} <br/> ${event.gamma}`;
-                    });
+<script>
+    function getAccel() {
+
+        document.body.innerHTML = 'ssssssssssss';
+
+        try {
+            DeviceMotionEvent.requestPermission().then(response => {
+                try {
+                    document.body.innerHTML = response;
+                    if (response === 'granted') {
+                        window.addEventListener('deviceorientation', event => {
+                            document.body.innerHTML = `${event.alpha} <br/> ${event.beta} <br/> ${event.gamma}`;
+                        });
+                    }
+                } catch (e) {
+                    document.body.innerHTML = e;
                 }
-            } catch (e) {
-                document.body.innerHTML = e;
-            }
-        });
-    } catch (e) {
-        document.body.innerHTML = e;
+            });
+        } catch (e) {
+            document.body.innerHTML = e;
+        }
     }
 </script>
 
