@@ -10,13 +10,17 @@
 <body>
 
 <script>
-    DeviceMotionEvent.requestPermission().then(response => {
-        if (response === 'granted') {
-            window.addEventListener('deviceorientation', function (event) {
-                document.body.innerHTML = `${event.alpha} <br/> ${event.beta} <br/> ${event.gamma}`;
-            });
-        }
-    });
+    try {
+        DeviceMotionEvent.requestPermission().then(response => {
+            if (response === 'granted') {
+                window.addEventListener('deviceorientation', function (event) {
+                    document.body.innerHTML = `${event.alpha} <br/> ${event.beta} <br/> ${event.gamma}`;
+                });
+            }
+        });
+    } catch (e) {
+        alert(e);
+    }
 </script>
 
 </body>
