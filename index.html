@@ -39,14 +39,6 @@
             total: getEmptyItem(),
         };
 
-        const acceleration = {
-            i: 0,
-            items: [
-                getEmptyItem(),
-            ],
-            total: getEmptyItem(),
-        };
-
         const accelerationIncludingGravity = {
             i: 0,
             items: [
@@ -64,8 +56,6 @@
                 smooth = e.target.valueAsNumber;
                 orientation.items.length = smooth;
                 orientation.total = orientation.items.reduce(itemsReducer, getEmptyItem())
-                acceleration.items.length = smooth;
-                acceleration.total = acceleration.items.reduce(itemsReducer, getEmptyItem())
                 accelerationIncludingGravity.items.length = smooth;
                 accelerationIncludingGravity.total = accelerationIncludingGravity.items.reduce(itemsReducer, getEmptyItem())
             } catch (e) {
@@ -95,27 +85,18 @@
                     addNewItem(orientation, event);
 
                     output.innerHTML = `
-                         <br/> ${orientation.total.alpha / smooth}
-                         <br/> ${orientation.total.beta / smooth}
-                         <br/> ${orientation.total.gamma / smooth}
-
-                         <br/> ${acceleration.total.alpha / smooth}
-                         <br/> ${acceleration.total.beta / smooth}
-                         <br/> ${acceleration.total.gamma / smooth}
-
-                         <br/> ${accelerationIncludingGravity.total.alpha / smooth}
-                         <br/> ${accelerationIncludingGravity.total.beta / smooth}
-                         <br/> ${accelerationIncludingGravity.total.gamma / smooth}
+                        <br/> ${orientation.total.beta / smooth}
+                        <br/> ${accelerationIncludingGravity.total.beta / smooth}
+                        <br/>
+                        <br/> ${orientation.total.alpha / smooth}
+                        <br/> ${orientation.total.gamma / smooth}
+                        <br/>
+                        <br/> ${accelerationIncludingGravity.total.alpha / smooth}
+                        <br/> ${accelerationIncludingGravity.total.gamma / smooth}
                     `;
                 });
 
                 window.addEventListener('devicemotion', event => {
-                    addNewItem(acceleration, {
-                        alpha: event.acceleration.x,
-                        beta: event.acceleration.y,
-                        gamma: event.acceleration.z,
-                    });
-
                     addNewItem(accelerationIncludingGravity, {
                         alpha: event.accelerationIncludingGravity.x,
                         beta: event.accelerationIncludingGravity.y,
