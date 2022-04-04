@@ -9,49 +9,145 @@
 </head>
 <body>
 
-<button id="accelPermsButton" onclick="getAccel()" style="height:50px;">Get Accelerometer Permissions</button>
+<button id="accelPermsButton" style="height:50px;">Get Accelerometer Permissions</button>
+<input type="range" id="smooth" name="smooth" min="1" max="60" value="1"/>
+<div id="output">
+
+</div>
 
 <script>
-    init();
-let global = {
-    acceleration: {},
-    accelerationIncludingGravity: {},
-};
+    (() => {
+        let smooth = 1;
 
-    function init() {
-        try {
-            window.addEventListener('deviceorientation', event => {
-                document.body.innerHTML = `${event.alpha} <br/> ${event.beta} <br/> ${event.gamma}`
-                + `<br/> ${global.acceleration.x} <br/> ${global.acceleration.y} <br/> ${global.acceleration.z}`
-                    + ` <br/> ${global.accelerationIncludingGravity.x} <br/> ${global.accelerationIncludingGravity.y} <br/> ${global.accelerationIncludingGravity.z}`;
-            });
+        const getEmptyItem = () => ({
+            alpha: 0,
+            beta: 0,
+            gamma: 0,
+        });
 
-            window.addEventListener('devicemotion', event => {
-                global.acceleration = event.acceleration;
-                global.accelerationIncludingGravity = event.accelerationIncludingGravity;
-            });
-        } catch (e) {
-            document.body.innerHTML = e;
+        const itemsReducer = (acc, item) => ({
+            alpha: acc.alpha + item.alpha,
+            beta: acc.beta + item.beta,
+            gamma: acc.gamma + item.gamma,
+        });
+
+        const orientation = {
+            i: 0,
+            items: [
+                getEmptyItem(),
+            ],
+            total: getEmptyItem(),
+        };
+
+        const acceleration = {
+            i: 0,
+            items: [
+                getEmptyItem(),
+            ],
+            total: getEmptyItem(),
+        };
+
+        const accelerationIncludingGravity = {
+            i: 0,
+            items: [
+                getEmptyItem(),
+            ],
+            total: getEmptyItem(),
+        };
+
+        const output = document.getElementById('output');
+
+        init();
+
+        document.getElementById('smooth').onchange = e => {
+            try {
+                smooth = e.target.valueAsNumber;
+                orientation.items.length = smooth;
+                orientation.total = orientation.items.reduce(itemsReducer, getEmptyItem())
+                acceleration.items.length = smooth;
+                acceleration.total = acceleration.items.reduce(itemsReducer, getEmptyItem())
+                accelerationIncludingGravity.items.length = smooth;
+                accelerationIncludingGravity.total = accelerationIncludingGravity.items.reduce(itemsReducer, getEmptyItem())
+            } catch (e) {
+                output.innerHTML = e;
+            }
         }
-    }
-    function getAccel() {
-        document.body.innerHTML = 'ssssssssssss';
 
-        try {
-            DeviceMotionEvent.requestPermission().then(response => {
-                try {
-                    document.body.innerHTML = response;
-                    if (response === 'granted') {
-                        init();
+        const addNewItem = (sensor, item) => {
+            sensor.i = (sensor.i + 1) % smooth;
+
+            sensor.total = {
+                alpha: sensor.total.alpha - (sensor.items[sensor.i]?.alpha || 0) + item.alpha,
+                beta: sensor.total.beta - (sensor.items[sensor.i]?.beta || 0) + item.beta,
+                gamma: sensor.total.gamma - (sensor.items[sensor.i]?.gamma || 0) + item.gamma,
+            }
+
+            sensor.items[sensor.i] = {
+                alpha: item.alpha,
+                beta: item.beta,
+                gamma: item.gamma,
+            };
+        }
+
+        function init() {
+            try {
+                window.addEventListener('deviceorientation', event => {
+                    addNewItem(orientation, event);
+
+                    output.innerHTML = `
+                         <br/> ${orientation.total.alpha / smooth}
+                         <br/> ${orientation.total.beta / smooth}
+                         <br/> ${orientation.total.gamma / smooth}
+
+                         <br/> ${acceleration.total.alpha / smooth}
+                         <br/> ${acceleration.total.beta / smooth}
+                         <br/> ${acceleration.total.gamma / smooth}
+
+                         <br/> ${accelerationIncludingGravity.total.alpha / smooth}
+                         <br/> ${accelerationIncludingGravity.total.beta / smooth}
+                         <br/> ${accelerationIncludingGravity.total.gamma / smooth}
+                    `;
+                });
+
+                window.addEventListener('devicemotion', event => {
+                    addNewItem(acceleration, {
+                        alfa: event.x,
+                        beta: event.y,
+                        gamma: event.z,
+                    });
+
+                    addNewItem(accelerationIncludingGravity, {
+                        alfa: event.x,
+                        beta: event.y,
+                        gamma: event.z,
+                    });
+                });
+            } catch (e) {
+                output.innerHTML = e;
+            }
+        }
+
+        document.getElementById('accelPermsButton').onclick = () => {
+            output.innerHTML = 'ssssssssssss';
+
+            try {
+                DeviceMotionEvent.requestPermission().then(response => {
+                    try {
+                        output.innerHTML = response;
+
+                        if (response === 'granted') {
+                            init();
+                        }
+                    } catch (e) {
+                        output.innerHTML = e;
                     }
-                } catch (e) {
-                    document.body.innerHTML = e;
-                }
-            });
-        } catch (e) {
-            document.body.innerHTML = e;
+                });
+            } catch (e) {
+                output.innerHTML = e;
+            }
         }
-    }
+
+    })();
 </script>
 
 </body>
