@@ -111,15 +111,15 @@
 
                 window.addEventListener('devicemotion', event => {
                     addNewItem(acceleration, {
-                        alfa: event.x,
-                        beta: event.y,
-                        gamma: event.z,
+                        alpha: event.acceleration.x,
+                        beta: event.acceleration.y,
+                        gamma: event.acceleration.z,
                     });
 
                     addNewItem(accelerationIncludingGravity, {
-                        alfa: event.x,
-                        beta: event.y,
-                        gamma: event.z,
+                        alpha: event.accelerationIncludingGravity.x,
+                        beta: event.accelerationIncludingGravity.y,
+                        gamma: event.accelerationIncludingGravity.z,
                     });
                 });
             } catch (e) {
