@@ -30,19 +30,19 @@
             beta: acc.beta + item.beta,
             gamma: acc.gamma + item.gamma,
         });
-
-        const orientation = {
-            i: 0,
-            items: [
-                getEmptyItem(),
-            ],
-            total: getEmptyItem(),
-        };
+        //
+        // const orientation = {
+        //     i: 0,
+        //     items: [
+        //         getEmptyItem(),
+        //     ],
+        //     total: getEmptyItem(),
+        // };
 
         const accelerationIncludingGravity = {
             i: 0,
             items: [
-                getEmptyItem(),
+                // getEmptyItem(),
             ],
             total: getEmptyItem(),
         };
@@ -54,8 +54,8 @@
         document.getElementById('smooth').onchange = e => {
             try {
                 smooth = e.target.valueAsNumber;
-                orientation.items.length = smooth;
-                orientation.total = orientation.items.reduce(itemsReducer, getEmptyItem())
+                // orientation.items.length = smooth;
+                // orientation.total = orientation.items.reduce(itemsReducer, getEmptyItem())
                 accelerationIncludingGravity.items.length = smooth;
                 accelerationIncludingGravity.total = accelerationIncludingGravity.items.reduce(itemsReducer, getEmptyItem())
             } catch (e) {
@@ -81,20 +81,9 @@
 
         function init() {
             try {
-                window.addEventListener('deviceorientation', event => {
-                    addNewItem(orientation, event);
-
-                    output.innerHTML = `
-                        <br/> ${orientation.total.beta / smooth}
-                        <br/> ${accelerationIncludingGravity.total.beta / smooth}
-                        <br/>
-                        <br/> ${orientation.total.alpha / smooth}
-                        <br/> ${orientation.total.gamma / smooth}
-                        <br/>
-                        <br/> ${accelerationIncludingGravity.total.alpha / smooth}
-                        <br/> ${accelerationIncludingGravity.total.gamma / smooth}
-                    `;
-                });
+                // window.addEventListener('deviceorientation', event => {
+                //     addNewItem(orientation, event);
+                // });
 
                 window.addEventListener('devicemotion', event => {
                     addNewItem(accelerationIncludingGravity, {
@@ -102,12 +91,31 @@
                         beta: event.accelerationIncludingGravity.y,
                         gamma: event.accelerationIncludingGravity.z,
                     });
+
+                    print();
                 });
             } catch (e) {
                 output.innerHTML = e;
             }
         }
 
+        function print() {
+            output.innerHTML = `
+<!--
+                        <br/> {orientation.total.beta / smooth}
+-->
+                        <br/> ${accelerationIncludingGravity.total.beta / smooth}
+<!--
+                        <br/>
+                        <br/> {orientation.total.alpha / smooth}
+                        <br/> {orientation.total.gamma / smooth}
+                        <br/>
+                        <br/> ${accelerationIncludingGravity.total.alpha / smooth}
+                        <br/> ${accelerationIncludingGravity.total.gamma / smooth}
+                        -->
+                    `;
+
+        }
         document.getElementById('accelPermsButton').onclick = () => {
             output.innerHTML = 'ssssssssssss';
 
