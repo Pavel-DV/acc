@@ -13,15 +13,22 @@
 
 <script>
     init();
+let global = {
+    acceleration: {},
+    accelerationIncludingGravity: {},
+};
 
     function init() {
         try {
             window.addEventListener('deviceorientation', event => {
-                // document.body.innerHTML = `${event.alpha} <br/> ${event.beta} <br/> ${event.gamma}`;
+                document.body.innerHTML = `${event.alpha} <br/> ${event.beta} <br/> ${event.gamma}`
+                + `<br/> ${global.acceleration.x} <br/> ${global.acceleration.y} <br/> ${global.acceleration.z}`
+                    + ` <br/> ${global.accelerationIncludingGravity.x} <br/> ${global.accelerationIncludingGravity.y} <br/> ${global.accelerationIncludingGravity.z}`;
             });
+
             window.addEventListener('devicemotion', event => {
-                document.body.innerHTML = `${event.acceleration.x} <br/> ${event.acceleration.y} <br/> ${event.acceleration.z}`
-                    + ` <br/> ${event.accelerationIncludingGravity.x} <br/> ${event.accelerationIncludingGravity.y} <br/> ${event.accelerationIncludingGravity.z}`;
+                global.acceleration = event.acceleration;
+                global.accelerationIncludingGravity = event.accelerationIncludingGravity;
             });
         } catch (e) {
             document.body.innerHTML = e;
