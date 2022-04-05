@@ -26,14 +26,14 @@
 <script>
     try {
         const video = document.querySelector('video');
-
         const play = document.getElementById('play');
 
         play.onclick = async () => {
-
             const output = document.getElementById('output');
-            output.innerHTML = (await navigator.mediaDevices.enumerateDevices()).filter(device => device.kind === 'videoinput').map(dev => `${dev.kind} -> ${dev.label}`).join('</br>');
-return;
+            output.innerHTML = (await navigator.mediaDevices.enumerateDevices())
+                .filter(device => device.kind === 'videoinput')
+                .map(dev => `${dev.kind} -> ${dev.label}`)
+                .join('</br>');
 
             const constraints = {
                 video: {
